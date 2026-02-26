@@ -240,22 +240,28 @@ def _find_flag_header_row(table) -> Optional[Tuple[int, int]]:
     return None
 
 
-def _find_condition_columns(table, header_row_idx: int) -> Dict[str, int]:
+def _find_condition_columns(table, header_row_idx: int, flag_col_idx: int) -> Dict[str, int]:
     """
     Find columns for 'Approved', 'Approved with Restriction', 'Not Approved'
     (and known synonyms like Compliant/Caution/Non-Compliant) in the header row
     and return a mapping: normalized name -> col_idx.
     """
+    """
+    Instead of relying on header text (which can vary), always treat the three
+    columns immediately to the right of the Flag column as:
+      - Flag+1  → Approved   (Green)
+      - Flag+2  → Approved with Restriction (Yellow)
+      - Flag+3  → Not Approved (Red)
+    as long as those columns exist in the table.
+    """
     mapping: Dict[str, int] = {}
-    header_row = list(table.rows)[header_row_idx]
-    for c_idx, cell in enumerate(header_row.cells):
-        text = cell.text.strip().lower()
-        if text in {"approved", "compliant"}:
-            mapping["Approved"] = c_idx
-        elif text in {"approved with restriction", "caution"}:
-            mapping["Approved with Restriction"] = c_idx
-        elif text in {"not approved", "non-compliant"}:
-            mapping["Not Approved"] = c_idx
+    max_col = len(table.columns) - 1
+    if flag_col_idx + 1 <= max_col:
+        mapping["Approved"] = flag_col_idx + 1
+    if flag_col_idx + 2 <= max_col:
+        mapping["Approved with Restriction"] = flag_col_idx + 2
+    if flag_col_idx + 3 <= max_col:
+        mapping["Not Approved"] = flag_col_idx + 3
     return mapping
 
 
@@ -399,7 +405,7 @@ def _process_slide_into_sheet(ws: Worksheet, slide, current_row: int) -> int:
         if not header_info:
             continue
         header_row_idx, flag_col_idx = header_info
-        cond_cols = _find_condition_columns(table, header_row_idx)
+        cond_cols = _find_condition_columns(table, header_row_idx, flag_col_idx)
 
         for r_idx, row in enumerate(table.rows):
             if r_idx <= header_row_idx:

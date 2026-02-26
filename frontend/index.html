@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>PPT → Test Excel Converter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="app-header">
+        <h1>PPT → Excel Test Sheet Converter</h1>
+        <p class="subtitle">
+          Upload a template-compliant <strong>.pptx</strong> file to generate a QA test Excel sheet.
+        </p>
+      </header>
+
+      <main class="app-main">
+        <section class="card">
+          <h2>Upload PPTX file</h2>
+          <p class="hint">
+            Only <code>.pptx</code> is supported. If you have a <code>.ppt</code> file, save it as <code>.pptx</code> in PowerPoint first, then upload.
+          </p>
+
+          <form id="upload-form">
+            <label class="file-input-label">
+              <span id="file-label-text">Choose PPTX file…</span>
+              <input
+                type="file"
+                id="ppt-file"
+                accept=".pptx,.ppt"
+                required
+              />
+            </label>
+
+            <button type="submit" id="convert-btn">Convert to test sheet</button>
+          </form>
+
+          <div id="status" class="status"></div>
+        </section>
+      </main>
+
+      <footer class="app-footer">
+        <p>
+          Questions are taken from the <code>Flag</code> column and split by <code>Approved</code>, <code>Approved with Restriction</code>, and <code>Not Approved</code> conditions.
+        </p>
+      </footer>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+  </html>
+

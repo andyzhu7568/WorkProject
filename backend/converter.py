@@ -243,17 +243,18 @@ def _find_flag_header_row(table) -> Optional[Tuple[int, int]]:
 def _find_condition_columns(table, header_row_idx: int) -> Dict[str, int]:
     """
     Find columns for 'Approved', 'Approved with Restriction', 'Not Approved'
-    in the header row and return a mapping: name -> col_idx.
+    (and known synonyms like Compliant/Caution/Non-Compliant) in the header row
+    and return a mapping: normalized name -> col_idx.
     """
     mapping: Dict[str, int] = {}
     header_row = list(table.rows)[header_row_idx]
     for c_idx, cell in enumerate(header_row.cells):
         text = cell.text.strip().lower()
-        if text == "approved":
+        if text in {"approved", "compliant"}:
             mapping["Approved"] = c_idx
-        elif text == "approved with restriction":
+        elif text in {"approved with restriction", "caution"}:
             mapping["Approved with Restriction"] = c_idx
-        elif text == "not approved":
+        elif text in {"not approved", "non-compliant"}:
             mapping["Not Approved"] = c_idx
     return mapping
 

@@ -395,8 +395,10 @@ def _get_slide_section_title(slide) -> str:
 
 def _process_slide_into_sheet(ws: Worksheet, slide, current_row: int) -> int:
     """Process one slide's tables and notes into the given worksheet. Return next row index."""
-    yes_note = "please note: the following factors only apply if you have answered yes"
-    no_note = "please note: the following factors only apply if you have answered no"
+    # Match shorter, more flexible substrings so that slight wording changes
+    # (e.g. missing 'Please note:') are still detected.
+    yes_note = "the following factors only apply if you have answered yes"
+    no_note = "the following factors only apply if you have answered no"
     for shape in slide.shapes:
         if shape.shape_type != MSO_SHAPE_TYPE.TABLE:
             continue

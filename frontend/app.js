@@ -12,6 +12,16 @@ function setStatus(message, type = "info") {
   else statusEl.classList.add("status--info");
 }
 
+function buildDownloadFilename(sourceName) {
+  const now = new Date();
+  const yyyy = String(now.getFullYear());
+  const mm = String(now.getMonth() + 1).padStart(2, "0");
+  const dd = String(now.getDate()).padStart(2, "0");
+  const baseName = (sourceName || "converted").replace(/\.(pptx|ppt)$/i, "");
+  const firstToken = baseName.split("_", 1)[0] || "converted";
+  return `${yyyy}${mm}${dd}_${firstToken}_QAQC.xlsx`;
+}
+
 fileInput.addEventListener("change", () => {
   const file = fileInput.files[0];
   fileLabelText.textContent = file ? file.name : "Choose PPTX file…";
@@ -61,7 +71,7 @@ form.addEventListener("submit", async (e) => {
     const dispo = resp.headers.get("Content-Disposition") || "";
     const match = dispo.match(/filename="(.+?)"/);
     const filename =
-      (match && match[1]) || file.name.replace(/\.(pptx|ppt)$/i, "") + "_test_sheet.xlsx";
+      (match && match[1]) || buildDownloadFilename(file.name);
 
     a.download = filename;
     document.body.appendChild(a);
@@ -76,4 +86,3 @@ form.addEventListener("submit", async (e) => {
     convertBtn.disabled = false;
   }
 });
-

@@ -52,6 +52,14 @@ def _ppt_to_pptx_bytes(ppt_bytes: bytes) -> bytes:
             return f.read()
 
 
+def _converted_filename(upload_filename: str) -> str:
+    """Build output filename as YYYYMMDD_FirstToken_QAQC.xlsx."""
+    date_prefix = datetime.now().strftime("%Y%m%d")
+    base_name = (upload_filename or "converted").rsplit(".", 1)[0] or "converted"
+    first_token = base_name.split("_", 1)[0] or "converted"
+    return f"{date_prefix}_{first_token}_QAQC.xlsx"
+
+
 app = FastAPI(title="PPT to Test Excel Converter")
 
 app.add_middleware(
@@ -91,9 +99,7 @@ async def convert_ppt_to_excel(file: UploadFile = File(...)):
             detail=f"Conversion error: {exc}",
         ) from exc
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    base_name = filename.rsplit(".", 1)[0] or "converted"
-    out_name = f"{base_name}_test_sheet_{timestamp}.xlsx"
+    out_name = _converted_filename(filename)
 
     return StreamingResponse(
         io.BytesIO(excel_bytes),
@@ -110,4 +116,3 @@ app.mount(
     StaticFiles(directory="frontend", html=True),
     name="static",
 )
-

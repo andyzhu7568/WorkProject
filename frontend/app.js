@@ -24,7 +24,7 @@ function buildDownloadFilename(sourceName) {
 
 fileInput.addEventListener("change", () => {
   const file = fileInput.files[0];
-  fileLabelText.textContent = file ? file.name : "Choose PPTX file…";
+  fileLabelText.textContent = file ? file.name : "Drop the PPTX File here";
   setStatus("");
 });
 

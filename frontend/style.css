@@ -95,6 +95,13 @@ form {
   transform: translateY(-1px);
 }
 
+#file-label-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  line-height: 1.25;
+}
+
 .file-input-label input[type="file"] {
   position: absolute;
   inset: 0;

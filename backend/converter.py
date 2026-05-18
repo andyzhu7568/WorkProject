@@ -74,6 +74,7 @@ def _init_sheet_headers(ws: Worksheet) -> None:
     """Apply fixed header rows and column widths to a worksheet."""
     ws["A1"] = "Employer"
     ws["A2"] = "Server"
+    ws["B2"] = "Live"
     ws["A3"] = "Test AccountID"
     ws["A4"] = "Config #"
     ws["B4"].alignment = Alignment(horizontal="left")

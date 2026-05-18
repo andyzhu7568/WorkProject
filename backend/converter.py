@@ -8,7 +8,7 @@ from pptx.enum.shapes import MSO_SHAPE_TYPE
 from openpyxl import Workbook
 from openpyxl.worksheet.worksheet import Worksheet
 from openpyxl.worksheet.datavalidation import DataValidation
-from openpyxl.styles import Font, PatternFill
+from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.formatting.rule import CellIsRule
 
 YELLOW_FILL = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
@@ -76,6 +76,7 @@ def _init_sheet_headers(ws: Worksheet) -> None:
     ws["A2"] = "Server"
     ws["A3"] = "Test AccountID"
     ws["A4"] = "Config #"
+    ws["B4"].alignment = Alignment(horizontal="left")
 
     ws["B5"] = "Question Name: "
     ws["C5"] = "Condition/Response"
@@ -131,7 +132,7 @@ def _apply_outcome_validation_and_format(ws: Worksheet, first_row: int, last_row
             rng,
             CellIsRule(
                 operator="equal",
-                formula=["Green"],
+                formula=['"Green"'],
                 font=OUTCOME_GREEN_FONT,
                 fill=OUTCOME_GREEN_FILL,
             ),
@@ -140,7 +141,7 @@ def _apply_outcome_validation_and_format(ws: Worksheet, first_row: int, last_row
             rng,
             CellIsRule(
                 operator="equal",
-                formula=["Yellow"],
+                formula=['"Yellow"'],
                 font=OUTCOME_YELLOW_FONT,
                 fill=OUTCOME_YELLOW_FILL,
             ),
@@ -149,7 +150,7 @@ def _apply_outcome_validation_and_format(ws: Worksheet, first_row: int, last_row
             rng,
             CellIsRule(
                 operator="equal",
-                formula=["Red"],
+                formula=['"Red"'],
                 font=OUTCOME_RED_FONT,
                 fill=OUTCOME_RED_FILL,
             ),
@@ -519,4 +520,3 @@ def pptx_to_test_excel(pptx_bytes: bytes) -> bytes:
     wb.save(output)
     output.seek(0)
     return output.getvalue()
-
